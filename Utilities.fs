@@ -27,6 +27,22 @@ module Utilities =
   open FSound.Signal
   open FSound.Play
 
+
+  /// <summary>Sequence multiple sound generators, playing one at a time, looping</summary>
+  /// <param name="generators">list of generators of float->float</param>
+  /// <param name="loopTime">The total length in seconds before loop begins again</param>
+  /// <param name="t">current playback time in seconds.</param>
+  /// <returns></returns>
+  ///
+
+  let sequencer (generators : (float -> float) list) (loopTime:float) (t:float) =
+    let noteTime = loopTime / float(generators.Length)
+    let timeIntoLoop = t % loopTime
+    let noteSelect = int(timeIntoLoop/noteTime)
+    let timeToLastNoteBegin = float(noteSelect)*noteTime
+    let timeIntoNote = timeIntoLoop - timeToLastNoteBegin
+    generators.[noteSelect] timeIntoNote
+
   ///
   /// <summary>Folding with an index</summary>
   /// <param name="f">function which takes a state, an integer which is the
