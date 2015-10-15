@@ -27,6 +27,14 @@ module Utilities =
   open FSound.Signal
   open FSound.Play
 
+  /// <summary>Transpose a pitch by a semitone. For example, +12.0 semitones multiplies the pitch by 2.</summary>
+  /// <param name="semitone">number of semitones to transpose</param>
+  /// <returns>Returns a ratio to multiply a pitch by.
+  ///          For +0.0 semitones, it would return 1.0.
+  ///          For -12.0 semitones, it would return 0.5   </returns>
+  ///
+  let transpose semitone:float =
+    2.0 ** (semitone / 12.0)
 
   /// <summary>Sequence multiple sound generators, playing one at a time, looping</summary>
   /// <param name="generators">list of generators of float->float</param>
