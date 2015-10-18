@@ -1,6 +1,42 @@
+# William's Songs made with FSound
+
 ## Synopsis
 
-FSound is a library for processing sound using F#
+This is William Sharkey's fork of [FSound](https://github.com/albertp007/FSound).
+
+FSound was created by Albert Pang (albert.pang@me.com). FSound is a library for processing sound using F#.
+
+The purpose of this repository is to showcase songs that I made with FSound.
+
+While making songs, I add a few utility methods help me, like sequence and transpose, that are currently not in the parent FSound repository. (as of Oct. 17, 2015)
+
+Like the parent project, *William's Songs made with FSound* and code are liscensed under GPL v3.0
+
+## Songs
+
+I have only uploaded one song's mp3 so far: 
+
+### 1. [Interior Sounds](http://algoind.com/live/FSounds/InteriorSounds.mp3) 
+Interior sounds is a loopy minimal electronic song. 
+It makes use of [an infinite sequence](http://www.fssnip.net/a5) generator to loop note seqences of different lengths. Here is the guts of the composition: 
+
+![F# Code Example](http://algoind.com/live/FSounds/InteriorSounds.png)
+
+The score is essentially an array of tuples (instrument, noteCount, control-voltage-array)
+
+For most of the instruments, control-voltage controls to the pitch.
+
+The pitches are actually given in semitones in this example, then converted to hz.
+
+The 42.0 sets the length of the loop -- 42 seconds.
+
+The 256 number next to mel instructs the program to:
+```
+subdivide the 42 seconds into 256 parts,
+generate 256 sounds with the mel generator
+taking pitch values sequentally from the  from the list [0;7;0;3]
+```
+For more context, download the project and see the full source code!
 
 ## Code Example
 
