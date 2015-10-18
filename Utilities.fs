@@ -44,14 +44,14 @@ module Utilities =
   /// <returns></returns>
   ///
 
-  let sequencer (generators : (float -> float) seq) (loopTime:float) (t:float) =
-    let noteTime = loopTime / float(generators |> Seq.length)
+  let sequencer (generators : (float -> float) array) (loopTime:float) (t:float) =
+    let noteTime = loopTime / float(generators.Length)
     let timeIntoLoop = t % loopTime
     let noteSelect = int(timeIntoLoop/noteTime)
     let timeToLastNoteBegin = float(noteSelect)*noteTime
     let timeIntoNote = timeIntoLoop - timeToLastNoteBegin
-    let g = generators |> Array.ofSeq 
-    g.[noteSelect] timeIntoNote
+    
+    generators.[noteSelect] timeIntoNote
 
   ///
   /// <summary>Folding with an index</summary>

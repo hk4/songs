@@ -49,8 +49,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="First song.fs" />
-    <Compile Include="TiggerSong.fs" />
     <Compile Include="I am weird.fs" />
+    <Compile Include="TiggerSong.fs" />
+    <Compile Include="InteriorSounds.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
