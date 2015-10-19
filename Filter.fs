@@ -153,7 +153,7 @@ module Filter =
   /// </returns>
   ///
   let delay fs bufferSec delayMs feedback wet =
-    if wet < 0.0 || wet > 1.0 then failwith "wet must be between 0.0 and 1.0"
+    //if wet < 0.0 || wet > 1.0 then failwith "wet must be between 0.0 and 1.0"
     let bufferSize = int (fs * bufferSec)
     let delaySamples = delayMs / 1000.0 * fs
     let delayNumSamples = int delaySamples

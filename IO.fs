@@ -243,4 +243,5 @@ module IO =
   ///
   let makeSoundFile samplingRate numChannels bitDepth isPCM rawData =
     SoundFile(samplingRate, numChannels, bitDepth, isPCM, rawData)
-    
+  
+

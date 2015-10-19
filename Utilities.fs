@@ -50,8 +50,50 @@ module Utilities =
     let noteSelect = int(timeIntoLoop/noteTime)
     let timeToLastNoteBegin = float(noteSelect)*noteTime
     let timeIntoNote = timeIntoLoop - timeToLastNoteBegin
-    
     generators.[noteSelect] timeIntoNote
+
+
+  /// <summary>Sequence multiple sound generators, playing one at a time for as long as specified in seconds, looping</summary>
+  /// <param name="generators">list of generators of float* float->float</param>
+  /// <param name="t">current playback time in seconds.</param>
+  /// <returns></returns>
+  ///
+  let sequencerWeighted (timeGens:(float*(float->float))[]) (t:float) =
+    let noteTimes = timeGens |> Array.map (fun (time,_) -> time)
+    let gens = timeGens |> Array.map (fun (_,gen) -> gen)
+    let cumTimes = noteTimes |> (Array.scan (+) 0.0)
+    let totalTime = cumTimes |> Array.last
+    let timeIntoLoop = t % totalTime
+    let noteIndex = cumTimes |> Array.findIndexBack (fun cumTime -> cumTime <= timeIntoLoop)
+    let currentNoteBeginTime = cumTimes.[noteIndex]
+    let timeIntoCurrentNote = timeIntoLoop - currentNoteBeginTime
+    (gens.[noteIndex] timeIntoCurrentNote)
+
+  
+
+  /// Combines array of pattern into a song length in seconds and a single wave generator
+  let songToWaveGen song =
+    let infiniteOf repeatedList = 
+        Seq.initInfinite (fun _ -> repeatedList) 
+            |> Seq.concat
+    let tracksToWaveGen timeAndTracks=
+      let (time, tracks) = timeAndTracks
+      let waveGen =
+        tracks
+        |> List.map (fun (gen, n, pArr) -> infiniteOf (pArr) |> Seq.take n |> Seq.map (float >> transpose >> gen))
+        |> List.map (fun gen -> sequencer (Array.ofSeq gen) time )
+        |> sum
+      (time, waveGen)
+
+    (
+      song |> Array.map (fun (time,_) -> time) |> Array.sum, //Total Song Time in seconds
+      song |> Array.map tracksToWaveGen |> sequencerWeighted  // Wave Generator
+    )
+ 
+
+
+   
+
 
   ///
   /// <summary>Folding with an index</summary>
@@ -198,3 +240,15 @@ module Utilities =
   let windSimulator a =
     ((modulate (whiteNoise 20000.0) (lfo 0.05 0.0 0.8)) 
     >> smithAngell 44100.0 880.0 10.0)
+
+
+  ///
+  /// <summary>Save a generator to disk.</summary>
+  /// <returns>unit</returns>
+  ///
+  let makeWavFileFromWaveformGen path sampleRate (lengthOfTime, waveformGen)=
+    waveformGen
+    |> generate sampleRate lengthOfTime
+    |> floatTo16
+    |> makeSoundFile sampleRate 1 16 true
+    |> toWav path

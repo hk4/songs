@@ -1,10 +1,8 @@
 ﻿module InteriorSounds
 
-open FSound.Play
 open FSound.Utilities
 open FSound.Signal
 open FSound.Filter
-open FSound.IO
 
 
 
@@ -42,22 +40,15 @@ let save filename =
                 (trump, 16,    [   -12;  -12;     -15; -15;  -4;   -4;  -5; -2; 10;  -12; 4;  36;] );
             ]
         )
-
-    
-    let saveGen path sr time waveformGen=
-      waveformGen
-      |> generate sr time
-      |> floatTo16
-      |> makeSoundFile sr 1 16 true
-      |> toWav path
+ 
 
     let (length, parts) = score
-    parts
-    |> List.map (fun (gen, n, pArr) -> infiniteOf (pArr) |> Seq.take n |> Seq.map (float >> transpose >> gen))
-    |> List.map (fun gen -> sequencer (Array.ofSeq gen) length )
-    |> sum
-    |> saveGen filename sr (length*2.0)
-    //|> playWave sr (length * 2.0)
+    let songGen = 
+        parts
+        |> List.map (fun (gen, n, pArr) -> infiniteOf (pArr) |> Seq.take n |> Seq.map (float >> transpose >> gen))
+        |> List.map (fun gen -> sequencer (Array.ofSeq gen) length )
+        |> sum
+    (length, songGen) |> makeWavFileFromWaveformGen filename sr
 
 
 
