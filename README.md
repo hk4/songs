@@ -10,15 +10,25 @@ The purpose of this repository is to showcase songs that I made with FSound.
 
 While making songs, I add a few utility methods help me, like sequence and transpose, that are currently not in the parent FSound repository. (as of Oct. 17, 2015)
 
-Like the parent project, *William's Songs made with FSound* and code are liscensed under GPL v3.0
+Like the parent project, *William's Songs made with FSound* and code are licensed under GPL v3.0
 
 ## Songs
 
-I have only uploaded one song's mp3 so far: 
+Newest First
+### 2. FHouse - [click to play](http://williamsharkey.com/FSounds/FHouse.mp3)
+(Oct - 18 - 2015)
+FHouse is my second attempt at a song. It is unhelpfully named - it is really not house music at all. It sounds vaguely of aphex twin.
+It makes use of a new feature - one is a weighted sequencer. It is a sequencer of generators that steps through generators in accordance to how many seconds is specified.
+This allowed me to create separate song sections and tie them together.
+Here is a screenshot of some code:
+![F# Code Example- FHouse](http://williamsharkey.com/FSounds/FHouse.png)
+I am not totally happy with it, but I think it is a big improvement over *Interior Sounds* -- because it has separate sections -- instead of a monotonous loop.
 
-### 1. [Interior Sounds](http://algoind.com/live/FSounds/InteriorSounds.mp3) 
+
+### 1. Interior Sounds - [click to play](http://algoind.com/live/FSounds/InteriorSounds.mp3) 
+(Oct - 17 - 2015)
 Interior sounds is a loopy minimal electronic song. 
-It makes use of [an infinite sequence](http://www.fssnip.net/a5) generator to loop note seqences of different lengths. Here is the guts of the composition: 
+It makes use of [an infinite sequence](http://www.fssnip.net/a5) generator to loop note sequences of different lengths. Here is the guts of the composition: 
 
 ![F# Code Example](http://algoind.com/live/FSounds/InteriorSounds.png)
 
@@ -34,7 +44,7 @@ The 256 number next to mel instructs the program to:
 ```
 subdivide the 42 seconds into 256 parts,
 generate 256 sounds with the mel generator
-taking pitch values sequentally from the  from the list [0;7;0;3]
+taking pitch values sequentially from the  from the list [0;7;0;3]
 ```
 For more context, download the project and see the full source code!
 
