@@ -241,12 +241,18 @@ module Utilities =
     ((modulate (whiteNoise 20000.0) (lfo 0.05 0.0 0.8)) 
     >> smithAngell 44100.0 880.0 10.0)
 
+  let makeDir path =
+    let create = System.IO.Directory.CreateDirectory
+    let getName = System.IO.Path.GetFileName
+    let getDir = System.IO.Path.GetDirectoryName
+    path |> getDir |> getName |> create |> ignore
 
   ///
   /// <summary>Save a generator to disk.</summary>
   /// <returns>unit</returns>
   ///
   let makeWavFileFromWaveformGen path sampleRate (lengthOfTime, waveformGen)=
+    makeDir(path)
     waveformGen
     |> generate sampleRate lengthOfTime
     |> floatTo16

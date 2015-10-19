@@ -53,6 +53,7 @@
     <Compile Include="TiggerSong.fs" />
     <Compile Include="InteriorSounds.fs" />
     <Compile Include="FHouse.fs" />
+    <Compile Include="Prime.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
