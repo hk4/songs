@@ -3,14 +3,12 @@
 open FSound.Utilities
 open FSound.Signal
 open FSound.Filter
-open FSound.Play
 
-let save name =
+let sr = 44100.
 
+let song = 
     let rootHz = 220.
     let volume = 5000.
-    let sr = 44100.
-
     let t semi = List.map (fun s -> s + semi)
 
     let insMel p = modulate (triangle (volume*0.18) (2.0 * rootHz * p)) (adsr 0.0 1.0 (p*0.05) 0.10 0.0 0.9)
@@ -23,7 +21,6 @@ let save name =
 
     let mel n s= (insMel,   n,   [0;9;3;7;7;15] |> t s )
     let hat n = (insHat,   n,   [0;9;3;7;7;15])
-    
     
     let a = ( 8.0, [ mel 12 0; mel 12 -12;(insChord, 2,  [-3;]);(bassChord, 8,  [-5;]);(bassChord, 8,  [0;])])
     let b = ( 8.0, [ mel 16 0 ;(insChord, 2,  [0;]) ;(bassChord, 2,  [-5;]);(bassChord, 16,  [7;])])
@@ -39,13 +36,13 @@ let save name =
                     (insChord, 8,  [-12;-5;7;0]); (insChord, 32,  [7;5;3;0]);
                     (insChord, 16,  [3;0;1]) ;(bassChord, 32,  [3;3;11;12]);(bassChord, 32,  [3;3;-12])])
     
-    let patterns = [|a;a;b;b;c;c;e;e;d;d;f;f;g;g;d;d;h;h;a;a|] 
+    [|a;a;b;b;c;c;e;e;d;d;f;f;g;g;d;d;h;h;a;a|]
+    |> songToWaveGen
     
-   
-    patterns |> songToWaveGen |> makeWavFileFromWaveformGen name sr 
+let play () =
+    let (duration, songGen) = song
+    playWave sr duration songGen
 
-    //let (d,g) = patterns |> songToWaveGen
-    //playWave sr d g
-    
-     
+let save name =
+    song |>  makeWavFileFromWaveformGen name sr
 
