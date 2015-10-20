@@ -9,8 +9,8 @@ let main argv =
     //InteriorSounds.save "InteriorSounds.wav"
     //FHouse.save "FHouse.wav"
     //Prime.save ("Prime/" + stamp)
-    ElleElision.play()
-
+    //ElleElision.play()
+    ElleElision.save ("ElleElision/"+stamp)
     printfn "%A" argv
     System.Console.ReadKey() |> ignore
     0 // return an integer exit code
