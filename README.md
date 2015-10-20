@@ -17,7 +17,7 @@ Like the parent project, *William's Songs made with FSound* and code are license
 Newest First
 ### 3. ElleElision - [click to play](http://williamsharkey.com/FSounds/ElleElision.mp3)
 (Oct - 19 - 2015)
-Elle Elision is a music-box type melody with a 13/4 rhythm, intersecting with other rhythmns.
+Elle Elision is a music-box type melody with a 13/4 rhythm, intersecting with other rhythms.
 It uses a chorus and delay effect lightly at first, then increasing a bit.
 
 Code:
