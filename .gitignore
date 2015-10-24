@@ -1,3 +1,6 @@
 bin/*
 obj/*
 .vs/*
+PlaySongs/PlaySongs/bin/*
+PlaySongs/PlaySongs/obj/*
+PlaySongs/PlaySongs/.vs/*
