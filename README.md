@@ -242,10 +242,30 @@ sampling rate 44100Hz, 1 channel, 16-bit sample and which lasts for 2 seconds
   open FSound.IO;;
   open FSound.Signal;;
   open FSound.Filter;;
-  modulate (square 10000.0 440.0 >> chorus 44100.0 30.0 0.4 1.5) (adsr 0.05 1.0 0.05 0.3 0.1 0.05) 
+  [modulate (square 10000.0 440.0 >> chorus 44100.0 30.0 0.4 1.5) (adsr 0.05 1.0 0.05 0.3 0.1 0.05) 
   >> delay 4410.0 2.0 200.0 0.9 0.5 
-  |> generate 44100.0 2.0 
-  |> streamToWav 44100 1 2 @"C:\Users\panga\project\FSound\blah.wav";;
+  |> generate 44100.0 2.0 ]
+  |> streamToWav 44100 2 @"C:\Users\panga\project\FSound\blah.wav";;
+  ```
+
+* Streaming two sequences of samples as left and right channel to a wav file
+
+  ```
+  open FSound.IO;;
+  open FSound.Signal;;
+  [sinusoid 10000.0 440.0 0.0; sinusoid 10000.0 445.0 0.0] 
+  |> List.map (generate 44100.0 5.0) 
+  |> streamToWav 44100 2 @"C:\Users\panga\project\FSound\stereo.wav";;
+  ```
+
+* A  more memory-efficient version of function to stream two sequences of samples as left and right channel to a wav file
+
+  ```
+  open FSound.IO;;
+  open FSound.Signal;;
+  (sinusoid 10000.0 440.0 0.0, sinusoid 10000.0 445.0 0.0)
+  |> pairMap (generate 44100.0 5.0) 
+  |> streamToWavLR 44100 2 @"C:\Users\panga\project\FSound\stereo.wav";;
   ```
   
 ## Motivation
@@ -317,6 +337,8 @@ C:\Users\panga\project\fsharp\FSound>dir *.wav
 ## Contributors
 Albert Pang (albert.pang@me.com)
 
+## Showcase
+William Sharkey's compositions (https://github.com/williamsharkey/William-FSound-Songs)
 
 ## License
 
