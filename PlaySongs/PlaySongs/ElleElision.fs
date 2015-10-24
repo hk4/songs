@@ -2,6 +2,7 @@
 
 open FSound.Utilities
 open FSound.Signal
+open FSound.IO
 open FSound.Filter
 
 let sr = 44100.
@@ -11,9 +12,9 @@ let song =
     let volume = 8000.
     let t semi = List.map (fun s -> s + semi)
 
-    let insA p = modulate (triangle (volume*0.18) (2.0 * rootHz * p)  >> chorus sr 10.0 0.1 0.8 ) (adsr 0.0 1.0 (p*0.05) 0.10 0.0 0.9) >> delay 44100.0 6.0 (8000./26.) 0.40 0.18
+    let insA p = modulate (triangle (volume*0.18) (2.0 * rootHz * p)  ) (adsr 0.0 1.0 (p*0.05) 0.10 0.0 0.9)// >> delay 44100.0 6.0 (8000./26.) 0.40 0.18
 
-    let InsB p = modulate (triangle (volume*0.18) (2.0 * rootHz * p) >> chorus sr 10.0 0.4 0.8 ) (adsr 0.0 1.0 (p*0.05) 0.10 0.0 0.9) >> delay 44100.0 6.0 (8000./26.) 0.80 0.3
+    let InsB p = modulate (triangle (volume*0.18) (2.0 * rootHz * p) ) (adsr 0.0 1.0 (p*0.05) 0.10 0.0 0.9)// >> delay 44100.0 6.0 (8000./26.) 0.80 0.3
 
     let mel n s= (insA,   n,   [0;9;2;11; 4;12;5;14; -5;19;-1;17; 12;] |> t s )
     let mel2 n s= (InsB,   n,   [0;9;2;11; 4;12;5;14; -5;19;-1;17; 12;] |> t s )
@@ -39,5 +40,6 @@ let play () =
     playWave sr duration songGen
 
 let save name =
-    song |>  makeWavFileFromWaveformGen name sr
+    let (t,gen) = song
+    streamToWav 44100 1 2 name (generate sr t (gen>> chorus sr 10.0 0.4 0.8 >> delay 44100.0 6.0 (8000./26.) 0.80 0.3)) //makeWavFileFromWaveformGen name sr
 
