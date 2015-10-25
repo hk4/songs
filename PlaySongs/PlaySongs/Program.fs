@@ -10,7 +10,9 @@ let main argv =
     //FHouse.save "FHouse.wav"
     //Prime.save ("Prime/" + stamp)
     //ElleElision.play()
-    ElleElision.save ("ElleElision/"+stamp)
-    printfn "%A" argv
-    System.Console.ReadKey() |> ignore
+    //ElleElision.save ("ElleElision/"+stamp)
+    //SaturdayNightKicks.save("SaturdayNightKicks/" + stamp)
+    SaturdayNightKicks.play()
+    //printfn "%A" argv
+    //System.Console.ReadKey() |> ignore
     0 // return an integer exit code

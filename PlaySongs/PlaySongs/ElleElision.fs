@@ -41,5 +41,5 @@ let play () =
 
 let save name =
     let (t,gen) = song
-    streamToWav 44100 1 2 name (generate sr t (gen>> chorus sr 10.0 0.4 0.8 >> delay 44100.0 6.0 (8000./26.) 0.80 0.3)) //makeWavFileFromWaveformGen name sr
+    streamToWavMono 44100 2 name (generate sr t (gen>> chorus sr 10.0 0.4 0.8 >> delay 44100.0 6.0 (8000./26.) 0.80 0.3)) //makeWavFileFromWaveformGen name sr
 

@@ -55,6 +55,7 @@
     <Compile Include="FHouse.fs" />
     <Compile Include="Prime.fs" />
     <Compile Include="ElleElision.fs" />
+    <Compile Include="SaturdayNightKicks.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>
