@@ -360,6 +360,7 @@ module IO =
   /// <returns>unit</returns>
   ///
   let streamToWavMono samplingRate bytesPerSample path samples =
+    System.IO.Directory.CreateDirectory(System.IO.FileInfo(path).DirectoryName) |> ignore
     use fileStream = new System.IO.FileStream(path, System.IO.FileMode.Create)
     use writer = new System.IO.BinaryWriter(fileStream)
     let mutable numSamples = 0

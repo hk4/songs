@@ -14,8 +14,8 @@ let main argv =
     //SaturdayNightKicks.save("SaturdayNightKicks/" + stamp)
     //SaturdayNightKicks.play()
     //ContinuousPhaseAccumulation.play()
-    FM2030.play()
-    
+    //FM2030.play()
+    FM2030.save("FM2030/" + stamp)
     //printfn "%A" argv
     //System.Console.ReadKey() |> ignore
     0 // return an integer exit code
