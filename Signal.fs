@@ -54,16 +54,15 @@ module Signal =
     a * cos (2.0*pi*f*t + ph)
   
 
-  let makeSinPhaseAccum () = 
-    
+  let makeSinPhaseAccum() = 
     let mutable phaseAccumulate = 0.0
     let mutable t_last = 0.0
     let twoPi = 2.0 * System.Math.PI
 
-    let sinusoidPhaseAccumulator a f ph t =
-        phaseAccumulate <- phaseAccumulate + (  twoPi * f  * ( t - t_last ) )
-        t_last <- t
-        a * cos (phaseAccumulate + ph)
+    let sinusoidPhaseAccumulator amplitude frequency phase time =
+        phaseAccumulate <- phaseAccumulate + (  twoPi * frequency  * ( time - t_last ) )
+        t_last <- time
+        amplitude * cos (phaseAccumulate + phase)
 
     sinusoidPhaseAccumulator
 

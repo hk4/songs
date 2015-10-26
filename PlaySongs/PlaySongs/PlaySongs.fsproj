@@ -57,6 +57,7 @@
     <Compile Include="ElleElision.fs" />
     <Compile Include="SaturdayNightKicks.fs" />
     <Compile Include="ContinuousPhaseAccumulation.fs" />
+    <Compile Include="FM2030.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>

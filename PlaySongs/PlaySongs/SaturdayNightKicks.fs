@@ -12,11 +12,11 @@ let song =
     let volume = 8000.
     let t semi = List.map (fun s -> s + semi)
 
-    let kick p t = sinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) t t
+    let kick p t = sinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) 0.0 t
     
-    let perc p t = sinusoid (volume * 0.1) (rootHz * p * 8.0 * (1.0 - (adsr 0.0 1.0 0.01 (1.0/16.0) 0.05 0.1 t))) t t
+    let perc p t = sinusoid (volume * 0.1) (rootHz * p * 8.0 * (1.0 - (adsr 0.0 1.0 0.01 (1.0/16.0) 0.05 0.1 t))) 0.0 t
 
-    let tiz p t = sinusoid (volume * 0.1) (rootHz * p * 32.0 * (1.0 - (adsr 0.0 1.0 0.1 (1.0/16.0) 0.05 0.1 t))) t t
+    let tiz p t = sinusoid (volume * 0.1) (rootHz * p * 32.0 * (1.0 - (adsr 0.0 1.0 0.1 (1.0/16.0) 0.05 0.1 t))) 0.0 t
 
     let tizEnv p =  modulate (tiz p) ( adsr 0.0 1.0 0.02 0.10 0.0 0.9)
 

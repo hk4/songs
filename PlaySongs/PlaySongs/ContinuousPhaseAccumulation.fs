@@ -27,11 +27,11 @@ let song =
 
     let newPat = ( 6.0, [ newSinNotes 12; ])
 
-    let normalKick p t = sinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) t t
+    let normalKick p t = sinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) 0.0 t
 
     let newKickSinusoid = makeSinPhaseAccum()
 
-    let newKick p t = newKickSinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) t t
+    let newKick p t = newKickSinusoid volume (rootHz * p * (adsr 0.0 1.0 0.02 (1.0/4.0) 0.05 2.0 t)) 0.0 t
 
     let normalKickNotes n = (normalKick,   n,   [0])
 
