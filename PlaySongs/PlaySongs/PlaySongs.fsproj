@@ -56,6 +56,7 @@
     <Compile Include="Prime.fs" />
     <Compile Include="ElleElision.fs" />
     <Compile Include="SaturdayNightKicks.fs" />
+    <Compile Include="ContinuousPhaseAccumulation.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>

@@ -12,7 +12,8 @@ let main argv =
     //ElleElision.play()
     //ElleElision.save ("ElleElision/"+stamp)
     //SaturdayNightKicks.save("SaturdayNightKicks/" + stamp)
-    SaturdayNightKicks.play()
+    //SaturdayNightKicks.play()
+    ContinuousPhaseAccumulation.play()
     //printfn "%A" argv
     //System.Console.ReadKey() |> ignore
     0 // return an integer exit code
