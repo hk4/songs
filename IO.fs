@@ -1,4 +1,4 @@
-//
+﻿//
 // FSound - F# Sound Processing Library
 // Copyright (c) 2015 by Albert Pang <albert.pang@me.com> 
 // All rights reserved.
@@ -327,18 +327,18 @@ module IO =
   let streamToWavMultiple samplingRate bytesPerSample path channels =
     use fileStream = new System.IO.FileStream(path, System.IO.FileMode.Create)
     use writer = new System.IO.BinaryWriter(fileStream)
-    let mutable numSamples = 0
+    let numSamples = ref 0
     let proc (b:byte) = writer.Write(b)
     let packChannels samples =
       Seq.iter (pack bytesPerSample proc) samples
-      numSamples <- numSamples + 1
+      numSamples := !numSamples + 1
     let numChannels = Seq.length channels
     // write header
     writeWavHeader samplingRate numChannels bytesPerSample 0 writer
     // pack and write the stream
     Seq.iter packChannels (zipSeq channels)
     // now we should know the number of bytes
-    let numBytes = numSamples * bytesPerSample * numChannels
+    let numBytes = !numSamples * bytesPerSample * numChannels
     fileStream.Seek(4L, SeekOrigin.Begin) |> ignore
     writer.Write(36+numBytes)
     fileStream.Seek(32L, SeekOrigin.Current) |> ignore
@@ -360,21 +360,20 @@ module IO =
   /// <returns>unit</returns>
   ///
   let streamToWavMono samplingRate bytesPerSample path samples =
-    System.IO.Directory.CreateDirectory(System.IO.FileInfo(path).DirectoryName) |> ignore
     use fileStream = new System.IO.FileStream(path, System.IO.FileMode.Create)
     use writer = new System.IO.BinaryWriter(fileStream)
-    let mutable numSamples = 0
+    let numSamples = ref 0
     let proc (b:byte) = writer.Write(b)
     let packSample sample =
       pack bytesPerSample proc sample
-      numSamples <- numSamples + 1
+      numSamples := !numSamples + 1
     let numChannels = 1
     // write header
     writeWavHeader samplingRate numChannels bytesPerSample 0 writer
     // pack and write the stream
     Seq.iter packSample samples
     // now we should know the number of bytes
-    let numBytes = numSamples * bytesPerSample * numChannels
+    let numBytes = !numSamples * bytesPerSample * numChannels
     fileStream.Seek(4L, SeekOrigin.Begin) |> ignore
     writer.Write(36+numBytes)
     fileStream.Seek(32L, SeekOrigin.Current) |> ignore
@@ -398,19 +397,19 @@ module IO =
   let streamToWavLR samplingRate bytesPerSample path (left, right) =
     use fileStream = new System.IO.FileStream(path, System.IO.FileMode.Create)
     use writer = new System.IO.BinaryWriter(fileStream)
-    let mutable numSamples = 0
+    let numSamples = ref 0
     let proc (b:byte) = writer.Write(b)
     let packSamples (l, r) =
       pack bytesPerSample proc l
       pack bytesPerSample proc r
-      numSamples <- numSamples + 1
+      numSamples := !numSamples + 1
     let numChannels = 2
     // write header
     writeWavHeader samplingRate numChannels bytesPerSample 0 writer
     // pack and write the stream
     Seq.iter packSamples (Seq.zip left right)
     // now we should know the number of bytes
-    let numBytes = numSamples * bytesPerSample * numChannels
+    let numBytes = !numSamples * bytesPerSample * numChannels
     fileStream.Seek(4L, SeekOrigin.Begin) |> ignore
     writer.Write(36+numBytes)
     fileStream.Seek(32L, SeekOrigin.Current) |> ignore
@@ -446,5 +445,6 @@ module IO =
     | [mono] -> streamToWavMono samplingRate bytesPerSample path mono
     | [l; r] -> streamToWavLR samplingRate bytesPerSample path (l, r)
     | rest -> streamToWavMultiple samplingRate bytesPerSample path rest
+
 
 

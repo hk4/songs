@@ -27,6 +27,9 @@ module Filter =
   open FSound.IO
   open FSound.Signal
 
+  let private random = System.Random()
+  let private random2 = System.Random()
+
   ///
   /// <summary>Filter with feedforward and feedback coefficients
   /// y(n) = ff0 * x(n) + ff1 * x(n-1) + ... + ffm * x(n-m) -
@@ -153,12 +156,12 @@ module Filter =
   /// </returns>
   ///
   let delay fs bufferSec delayMs feedback wet =
-    //if wet < 0.0 || wet > 1.0 then failwith "wet must be between 0.0 and 1.0"
+    if wet < 0.0 || wet > 1.0 then failwith "wet must be between 0.0 and 1.0"
     let bufferSize = int (fs * bufferSec)
     let delaySamples = delayMs / 1000.0 * fs
     let delayNumSamples = int delaySamples
     let fractionalDelay = delaySamples - float delayNumSamples
-    let buffer = CircularBuffer(bufferSize, delayNumSamples, 0.0)
+    let buffer = CircularBuffer(bufferSize, delayNumSamples, (fun _ -> 0.0))
     fun sample ->
       let yn = 
         if delayNumSamples = 0 && fractionalDelay = 0.0 then sample 
@@ -187,11 +190,11 @@ module Filter =
     if bufferSec * 1000.0 < delayMs then failwith "buffer size not large enough"
     let bufferSize = int (fs * bufferSec)
     let delaySamples = delayMs / 1000.0 * fs
-    let buffer = CircularBuffer(bufferSize, 0, 0.0)
-    let mutable n = 0
+    let buffer = CircularBuffer(bufferSize, 0, fun _ -> 0.0)
+    let n = ref 0
     fun sample ->
-      n <- n + 1
-      let t = (float n)/fs
+      n := !n + 1
+      let t = (float !n)/fs
       // Add an extra one sample to the delay to make sure there is one sample 
       // ahead for linear interpolation
       let d = (lfo t) * delaySamples + 1.0
@@ -249,3 +252,73 @@ module Filter =
     let bufferSec = maxDelayMs / 1000.0 * 2.0
     mod_delay fs bufferSec maxDelayMs 0.0 wet 
       (lfo sweepFreq (System.Math.PI/2.0) 1.0)
+
+  ///
+  /// <summary>Models the sound of a plucked string using the Karplus-Strong
+  /// algorithm.  This is a first attempt and there is no control for
+  /// attenuation at the moment</summary>
+  /// <param name="a">Maximum amplitude in the wave table</param>
+  /// <param name="fs">Sampling frequencey in Hz</param>
+  /// <param name="f">Frequency in Hz</param>
+  /// <param name="blend"> 1.0 - plucked string, 0.5 - snare drum</param>
+  /// <param name="initBufferFunc">Function to initialize the wave table</param>
+  /// <returns>Function which takes one dummy argument and generates samples
+  /// that sounds like a plucked string using the Karplus Strong algorithm
+  /// </returns>
+  ///
+  let pluckInitBuffer a (fs:float) f blend (initBufferFunc:(int->float)) =
+    let nSample = (int (round fs/f))
+    let lag = nSample
+    let wavetable = CircularBuffer(nSample, lag, initBufferFunc)
+    fun (_:float) -> 
+      let output = wavetable.Get()
+      let y = 0.5*(wavetable.Get() + wavetable.GetOffset(-1))
+      let y' = if blend = 1.0 then y else 
+                (if random2.NextDouble() <= blend then 1.0 else -1.0) * y
+      wavetable.Push(y')
+      output
+
+  ///
+  /// <summary>Two level randomness generator function to initialize the
+  /// wavetable in the pluckInitBuffer function</summary>
+  /// <param name="a">Maximum amplitude</param>
+  /// <returns>Init function for an array</returns>
+  ///
+  let init2LevelRandom a =
+    fun _ -> (if random.Next(2) = 0 then -1.0 else 1.0) * a
+
+  ///
+  /// <summary>Function to initialize the wavetable in the pluckInitBuffer 
+  /// function with white noise</summary>
+  /// <param name="a">Maximum amplitude</param>
+  /// <returns>Init function for an array</returns>
+  ///
+  let initWhiteNoise a =
+    let dummy = 0.0
+    fun _ -> whiteNoise a dummy
+
+  ///
+  /// <summary>Pluck string function with 2 level randomness initialization.
+  /// This simply calls pluckInitBuffer with init2LevelRandom</summary>
+  /// <param name="a">Maximum amplitude</param>
+  /// <param name="fs">Sampling frequency in Hz</param>
+  /// <param name="f">Frequency in Hz</param>
+  /// <returns>Function which takes one dummy argument and generates samples
+  /// that sounds like a plucked string using the Karplus Strong algorithm
+  /// </returns>
+  ///
+  let pluck2LevelRandom a (fs:float) f =
+    pluckInitBuffer a fs f 1.0 (init2LevelRandom a)
+
+  ///
+  /// <summary>Pluck string function with white noise initialization. This 
+  /// simply calls pluckInitBuffer with initWhiteNoise</summary>
+  /// <param name="a">Maximum amplitude</param>
+  /// <param name="fs">Sampling frequency in Hz</param>
+  /// <param name="f">Frequency in Hz</param>
+  /// <returns>Function which takes one dummy argument and generates samples
+  /// that sounds like a plucked string using the Karplus Strong algorithm
+  /// </returns>
+  ///
+  let pluckWhiteNoise a (fs:float) f =
+    pluckInitBuffer a fs f 1.0 (initWhiteNoise a)
