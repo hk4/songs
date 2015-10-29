@@ -1,4 +1,4 @@
-﻿
+﻿module PlaySongs.Program
 
 [<EntryPoint>]
 let main argv = 

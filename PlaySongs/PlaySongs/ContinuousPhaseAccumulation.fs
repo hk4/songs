@@ -1,4 +1,4 @@
-﻿module ContinuousPhaseAccumulation
+﻿module PlaySongs.ContinuousPhaseAccumulation
 
 
 open FSound.Utilities
@@ -43,7 +43,7 @@ let song =
 
     [| newKickPat; normalKickPat|]
     |> songToWaveGen
-    
+   
 let play () =
     let (duration, songGen) = song
     let x = async {do! Async.Sleep(1010 * (int duration))}
@@ -54,3 +54,26 @@ let play () =
 let save name =
     let (t,gen) = song
     streamToWavMono 44100 2 name (generate sr t (gen))
+
+let kickSong volume (pitch:float) attack peak decay sustain sustainTime release= 
+    
+    let volume = 32767.0 * volume
+
+
+    let newKickSinusoid = makeSinPhaseAccum()
+
+    let newKick p t = newKickSinusoid volume ( pitch  * (adsr attack peak decay sustain sustainTime release t)) 0.0 t
+    
+    let newKickNotes n = (newKick,   n,   [0])
+
+    let newKickPat =  ( 4.0, [ newKickNotes 4; ])
+
+    [| newKickPat|] |> songToWaveGen
+
+    
+let playKick volume (pitch:float) attack peak decay sustain sustainTime release =
+    let (duration, songGen) = kickSong volume pitch attack peak decay sustain sustainTime release
+    let x = async {do! Async.Sleep(1010 * (int duration))}
+    playWave sr duration songGen
+    Async.RunSynchronously(x)
+    
